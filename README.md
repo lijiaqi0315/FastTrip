@@ -69,3 +69,8 @@ Batch deletion for the output files is also supported:
 make rm
 ```
 
+## Acknowledgments
+
+* We thank Yanbin Wang (Peking University), and Shaohua Li (CEA, LanZhou) for testing the FastTrip package and Zhigang Peng (Georgia Tech) for valuable advice. We appreciate Rongjiang Wang (GFZ) for providing the source code of QSEIS.
+* We thank the Institute for Cyber-Enabled Research (ICER) at Michigan State University, the Extreme Science and Engineering Discovery Environment (XSEDE supported by NSF grant ACI-1053575), and the High-performance Computing Platform of Peking University for providing the high-performance computing resources.
+* This research was supported by NSF grant 1802247 and the startup fund of Min Chen at Michigan State University.
