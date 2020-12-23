@@ -1,0 +1,24 @@
+2                        -- flag for obj. function (1=mahfoud,2=fortran)
+194                      -- seed for PRNG (positive integer)
+10                       -- number of demes (subpopulations)
+10                       -- number of models in each deme
+1                        -- number of elitist models in each deme
+201                       -- number of generations to run algorithm
+0.900                    -- probability of crossover (0.8-1.0)
+0.130                    -- probability of mutation  ( (1-3)/string_length )
+0.1                      -- Rc for similarity metric, 0.0 for no effect
+basic                    -- distance type (basic)
+lcombo                   -- crossover type (spoint,lcombo)
+uniform                  -- mutation type (gaussian or uniform)
+basic                    -- fitness scaling type (basic, linear, or rank)
+universal                -- selection type (universal or roulette)       
+-0.1 0.1 0.1  1.0
+-0.1 0.1 0.1  1.0
+-0.1 0.1 0.1  1.0
+-0.1 0.1 0.1  1.0
+-0.4 0.4 0.1  1.0
+-0.4 0.4 0.1  1.0
+-0.4 0.4 0.1  1.0
+-0.4 0.4 0.1  1.0
+-0.1 0.1 0.1  1.0
+ -30  30 0.1  1.0

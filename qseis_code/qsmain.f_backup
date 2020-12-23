@@ -1,0 +1,92 @@
+      program qseis
+      implicit none
+c
+      include 'qsglobal.h'
+c
+c     work space
+c
+      integer i,istp,nssel,runtime
+      double precision pi,srate
+      logical grnexist
+      integer time
+      integer Narg
+cccc    modify   cccc
+      character(3) tempt
+      character(31) absolute_path
+      character(11) folder_name
+      character(42) absolute_name
+c			character(54) inputfile
+cccc    modify   cccc
+c     read input file by command line argument
+      Narg=IARGC()
+      if(Narg.gt.0)then
+cccc    modify   cccc
+c          CALL GETARG(1,inputfile)
+           CALL get_command_argument(1,tempt)
+cccc    modify   cccc
+      else
+          print *,'Usage: qseis inputfile'
+          STOP "no inputfile"
+      endif
+c
+      runtime=time()
+c
+      pi=4.d0*datan(1.d0)
+c
+
+cccc    modify   cccc 
+      folder_name=tempt//'_folder/'
+      absolute_path=
+     &'/home/lijq/mpi_myforward/EXPYY/'
+      absolute_name=absolute_path//folder_name
+      inputfile=absolute_name//'velocity.dat'
+cccc    modify   cccc
+
+
+cccc    modify   cccc
+
+      open(10,file=
+     &'/home/lijq/mpi_myforward/EXPYY/Qseis.input',status='old')
+     
+c      print *,inputfile
+      open(741,file=inputfile,status='old')
+      call qsgetinp(10,741,srate,nssel)
+      close(10)
+      close(741)
+cccc    modify   cccc     
+      
+c
+      if(nssel-ssel(7).gt.0)then
+        grnexist=.false.
+        call qswvint(srate)
+        call qsmultis(grnexist)
+        iexist=0
+        do istp=1,7
+          do i=1,4
+            if(fsel(i,istp).eq.1)then
+cccc    modify   cccc 
+              call qsfftinv(i,istp,absolute_name)
+cccc    modify   cccc 
+            endif
+          enddo
+        enddo
+      else
+        grnexist=.true.
+        call qsmultis(grnexist)
+      endif
+c
+      runtime=time()-runtime
+      write(*,'(a)')' #############################################'
+      write(*,'(a)')' #                                           #'
+      write(*,'(a)')' #      End of computations with qseis06     #'
+      write(*,'(a)')' #                                           #'
+      write(*,'(a,i10,a)')' #       Run time: ',runtime,
+     +                                           ' sec            #'
+      write(*,'(a)')' #############################################'
+1001  format(2i7,E12.4,a)
+1002  format(i4,a,E12.4,a,$)
+1003  format(E12.5,$)
+1004  format(2E12.4,$)
+1005  format(2E12.4)
+ 500  stop
+      end

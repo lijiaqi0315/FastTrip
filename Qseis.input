@@ -1,0 +1,253 @@
+# This is the input file of FORTRAN77 program "qseis06" for calculation of
+# synthetic seismograms based on a layered halfspace earth model.
+#
+# by
+# Rongjiang  Wang <wang@gfz-potsdam.de>
+# GeoForschungsZentrum Potsdam
+# Telegrafenberg, D-14473 Potsdam, Germany
+#
+# Last modified: Potsdam, Nov., 2006
+#
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# If not specified, SI Unit System is used overall!
+#
+# Coordinate systems:
+# cylindrical (z,r,t) with z = downward,
+#                          r = from source outward,
+#                          t = azmuth angle from north to east;
+# cartesian (x,y,z) with   x = north,
+#                          y = east,
+#                          z = downward;
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+#
+#   SOURCE PARAMETERS
+#   =================
+# 1. source depth [km]
+#------------------------------------------------------------------------------
+  114
+#------------------------------------------------------------------------------
+#
+#   RECEIVER PARAMETERS
+#   ===================
+# 1. receiver depth [km]
+# 2. switch for distance sampling role (1/0 = equidistant/irregular); switch
+#    for unit used (1/0 = km/deg)
+# 3. number of distance samples
+# 4. if equidistant, then start and end trace distance (> 0); else distance
+#    list (please order the receiver distances from small to large)
+# 5. (reduced) time begin [sec] & length of time window [sec], number of time
+#    samples (<= 2*nfmax in qsglobal.h)
+# 6. switch for unit of the following time reduction parameter: 1 = velocity
+#    [km/sec], 0 = slowness [sec/deg]; time reduction parameter
+#------------------------------------------------------------------------------
+ 0.00         |dble: receiver_depth;
+ 1  0          |int: sw_equidistant, sw_d_unit;
+ 17
+ 13 21
+ 10.00 100.00 401        |dble: t_start,t_window; int: no_t_samples;
+ 0  11.00          |int: sw_t_reduce; dble: t_reduce;
+#------------------------------------------------------------------------------
+#
+#   WAVENUMBER INTEGRATION PARAMETERS
+#   =================================
+# 1. select slowness integration algorithm (0 = suggested for full wave-field
+#    modelling; 1 or 2 = suggested when using a slowness window with narrow
+#    taper range - a technique for suppressing space-domain aliasing);
+# 2. 4 parameters for low and high slowness (Note 1) cut-offs [s/km] with
+#    tapering: 0 < slw1 < slw2 defining cosine taper at the lower end, and 0 <
+#    slw3 < slw4 defining the cosine taper at the higher end. default values
+#    will be used in case of inconsistent input of the cut-offs (possibly with
+#    much more computational effort);
+# 3. parameter for sampling rate of the wavenumber integration (1 = sampled
+#    with the spatial Nyquist frequency, 2 = sampled with twice higher than
+#    the Nyquist, and so on: the larger this parameter, the smaller the space-
+#    domain aliasing effect, but also the more computation effort);
+# 4. the factor for suppressing time domain aliasing (> 0 and <= 1) (Note 2).
+#------------------------------------------------------------------------------
+ 0              |int: sw_algorithm;
+ 0  0  0.12  0.125                          |dble: sw_cut_off,slw(1-4);
+  1.5                |dble: sample_rate;
+  0.5                |dble: supp_factor;
+#------------------------------------------------------------------------------
+#
+#           OPTIONS FOR PARTIAL SOLUTIONS
+#       (only applied to the source-site structure)
+#       ===========================================
+#
+# 1. switch for filtering free surface effects (0 = with free surface, i.e.,
+#    do not select this filter; 1 = without free surface; 2 = without free
+#    surface but with correction on amplitude and wave form. Note switch 2
+#    can only be used for receivers at the surface)
+# 2. switch for filtering waves with a shallow penetration depth (concerning
+#    their whole trace from source to receiver), penetration depth limit [km]
+#
+#    if this option is selected, waves whose travel path never exceeds the
+#    given depth limit will be filtered ("seismic nuting"). the condition for
+#    selecting this filter is that the given shallow path depth limit should
+#    be larger than both source and receiver depth.
+#
+# 3. number of depth ranges where the following selected up/down-sp2oing P or
+#    SV waves should be filtered
+# 4. the 1. depth range: upper and lower depth [km], switch for filtering P
+#    or SV wave in this depth range:
+#
+#    switch no:              1      2        3       4         other
+#    filtered phase:         P(up)  P(down)  SV(up)  SV(down)  Error
+#
+# 5. the 2. ...
+#
+#    The partial solution options are useful tools to increase the numerical
+#    significance of desired wave phases. Especially when the desired phases
+#    are smaller than the undesired phases, these options should be selected
+#    and carefully combined.
+#------------------------------------------------------------------------------
+ 0              |int: isurf;
+ 0   300.00               |int: sw_phase_filter; dble:shallow_depth_limit;
+ 0              |int: no_of_depth_ranges;
+#------------------------------------------------------------------------------
+#
+#   SOURCE TIME FUNCTION (WAVELET) PARAMETERS (Note 3)
+#   ==================================================
+# 1. wavelet duration [unit = time sample rather than sec!], that is about
+#    equal to the half-amplitude cut-off period of the wavelet (> 0. if <= 0,
+#    then default value = 2 time samples will be used), and switch for the
+#    wavelet form (0 = user's own wavelet; 1 = default wavelet: normalized
+#    square half-sinusoid for simulating a physical delta impulse; 2 = tapered
+#    Heaviside wavelet, i.e. integral of wavelet 1)
+# 2. IF user's own wavelet is selected, then number of the wavelet time samples
+#    (<= 1024), and followed by
+# 3. equidistant wavelet time samples
+# 4  ...(continue) (! no comment lines allowed between the time sample list!)
+#    IF default, delete line 2, 3, 4 ... or comment them out!
+#------------------------------------------------------------------------------
+ 8.00   2           |int:dble: wavelet_duration; sw_wavelet;
+# 61
+#   0.0029 0.0070 0.0103 0.0148 0.0211 0.0296 0.0411 0.0562 0.0758 0.1010 0.1327 
+#   0.1722 0.2203 0.2783 0.3469 0.4266 0.5179 0.6204 0.7334 0.8555 0.9848 1.1187 
+#   1.2541 1.3874 1.5146 1.6318 1.7348 1.8201 1.8844 1.9253 1.9412 1.9315 1.8965 
+#   1.8375 1.7570 1.6578 1.5437 1.4185 1.2863 1.1510 1.0164 0.8858 0.7617 0.6465 
+#   0.0321 0.0229 0.0161 0.0112 0.0077 0.0052 
+# 20            |int:no_w_samples; below dble: w_sampels;
+#  0.000  0.063  0.127  0.189  0.251  0.312  0.372  0.430  0.486  0.541
+#  0.593  0.643  0.690  0.735  0.776  0.815  0.850  0.881  0.910  0.934
+#------------------------------------------------------------------------------
+#
+#    FILTER PARAMETERS OF RECEIVERS (SEISMOMETERS OR HYDROPHONES)
+#    ============================================================
+# 1. constant coefficient (normalization factor)
+# 2. number of roots (<= nrootmax in qsglobal.h)
+# 3. list of the root positions in the complex format (Re,Im). If no roots,
+#    comment out this line
+# 4. number of poles (<= npolemax in qsglobal.h)
+# 5. list of the pole positions in the complex format (Re,Im). If no poles,
+#    comment out this line
+#------------------------------------------------------------------------------
+ 1.00
+ 0
+# (0.0,0.0), (0.0,0.0)
+ 0
+# (0.0,0.0), (0.0,0.0)
+#------------------------------------------------------------------------------
+#
+#   OUTPUT FILES FOR GREEN'S FUNCTIONS (Note 4)
+#   ===========================================
+# 1. selections of source types (yes/no = 1/0)
+# 2. file names of Green's functions (please give the names without extensions,
+#    which will be appended by the program automatically: *.tz, *.tr, *.tt
+#    and *.tv are for the vertical, radial, tangential, and volume change (for
+#    hydrophones) components, respectively)
+#------------------------------------------------------------------------------
+#  explosion   strike-slip dip-slip   clvd       single_f_v  single_f_h
+#------------------------------------------------------------------------------
+  1         1        1         1         1         1         |int
+   'ex-1'        'ss-1'        'ds-1'        'cl-1'        'fz-1'        'fh-1'        |char
+#------------------------------------------------------------------------------
+#   OUTPUT FILES FOR AN ARBITRARY POINT DISLOCATION SOURCE
+#               (for applications to earthquakes)
+#   ======================================================
+# 1. selection (0 = not selected; 1 or 2 = selected), if (selection = 1), then
+#    the 6 moment tensor elements [N*m]: Mxx, Myy, Mzz, Mxy, Myz, Mzx (x is
+#    northward, y is eastward and z is downard); else if (selection = 2), then
+#    Mis [N*m] = isotropic moment part = (MT+MN+MP)/3, Mcl = CLVD moment part
+#    = (2/3)(MT+MP-2*MN), Mdc = double-couple moment part = MT-MN, Strike [deg],
+#    Dip [deg] and Rake [deg].
+#
+#    Note: to use this option, the Green's functions above should be computed
+#          (selection = 1) if they do not exist already.
+#
+#                 north(x)
+#                  /
+#                 /\ strike
+#                *----------------------->  east(y)
+#                |\                       \
+#                |-\                       \
+#                |  \     fault plane       \
+#                |90 \                       \
+#                |-dip\                       \
+#                |     \                       \
+#                |      \                       \
+#           downward(z)  \-----------------------\
+#
+# 2. switch for azimuth distribution of the stations (0 = uniform azimuth,
+#    else = irregular azimuth angles)
+# 3. list of the azimuth angles [deg] for all stations given above (if the
+#    uniform azimuth is selected, then only one azimuth angle is required)
+#
+#------------------------------------------------------------------------------
+#     Mis        Mcl        Mdc        Strike     Dip        Rake      File
+#------------------------------------------------------------------------------
+#
+#------------------------------------------------------------------------------
+#     Mxx        Myy        Mzz        Mxy        Myz        Mzx       File
+#------------------------------------------------------------------------------
+ 1    -1.340e+17    2.170e+17    -8.300e+16    9.100e+16    8.710e+17    -4.650e+17   'syn_seis'
+ 0
+ 271
+#------------------------------------------------------------------------------
+#
+#   GLOBAL MODEL PARAMETERS (Note 5)
+#   ================================
+# 1. switch for flat-earth-transform
+# 2. gradient resolution [%] of vp, vs, and ro (density), if <= 0, then default
+#    values (depending on wave length at cut-off frequency) will be used
+#------------------------------------------------------------------------------
+ 1            |int: sw_flat_earth_transform;
+ 0.25  0.25  5       |dble: vp_res, vs_res, ro_res
+#------------------------------------------------------------------------------
+#
+#                   LAYERED EARTH MODEL
+#       (SHALLOW SOURCE + UNIFORM DEEP SOURCE/RECEIVER STRUCTURE)
+#   =========================================================
+# 1. number of data lines of the layered model (source site)
+#------------------------------------------------------------------------------
+# cccc    modify   cccc  
+#------------------------------------------------------------------------------
+#
+#   MULTILAYERED MODEL PARAMETERS (source site)
+#   ===========================================
+# no  depth[km]  vp[km/s]  vs[km/s]  ro[g/cm^3] qp      qs
+#------------------------------------------------------------------------------
+# cccc    modify   cccc  
+#------------------------------------------------------------------------------
+#
+#             LAYERED EARTH MODEL
+#       (ONLY THE SHALLOW RECEIVER STRUCTURE)
+#       =====================================
+# 1. number of data lines of the layered model
+#
+#    Note: if the number = 0, then the receiver site is the same as the
+#          source site, else different receiver-site structure is considered.
+#          please be sure that the lowest interface of the receiver-site
+#          structure given given below can be found within the source-site
+ #          structure, too.
+#
+#------------------------------------------------------------------------------
+ 0             |int: no_model_lines;
+#------------------------------------------------------------------------------
+#
+#   MULTILAYERED MODEL PARAMETERS (shallow receiver-site structure)
+#   ===============================================================
+# no  depth[km]    vp[km/s]    vs[km/s]   ro[g/cm^3]   qp      qs
+#------------------------------------------------------------------------------
+#
+#---------------------------------end of all inputs----------------------------
