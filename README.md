@@ -41,9 +41,7 @@ Then we specify this path to the package:
 ```
 vi ./go_fort
 
-#!/bin/sh
-Python_Path='/mnt/d/anaconda/anaconda/envs/FastTrip/bin/python'
-$Python_Path ./Model.py
+Line 2: Python_Path='/mnt/d/anaconda/anaconda/envs/FastTrip/bin/python'
 
 :wq
 ```
@@ -53,7 +51,7 @@ According to the status of your computer, specify the number of cores:
 vi ./Model.py
 
 ...
-CoreNumber=5
+Line 37:CoreNumber=5
 ...
 
 :wq
