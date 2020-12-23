@@ -48,5 +48,24 @@ $Python_Path ./Model.py
 :wq
 ```
 
+According to the status of your computer, specify the number of cores:
+```
+vi ./Model.py
 
+...
+CoreNumber=5
+...
+
+:wq
+```
+
+We can simply run FastTrip for the example in the paper:
+```
+./Run_FastTrip
+```
+
+Batch deletion for the output files is also supported:
+```
+make rm
+```
 
