@@ -59,7 +59,7 @@ Line 37:CoreNumber=5
 
 We can simply run FastTrip for the example in the paper:
 ```
-./Run_FastTrip
+./Optimization_NGA
 ```
 
 Batch deletion for the output files is also supported:
