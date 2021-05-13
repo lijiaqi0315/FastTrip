@@ -21,7 +21,12 @@ conda activate FastTrip
 
 Some Python modules are needed:
 ```
-conda install numpy scipy mpi4py
+conda install numpy scipy
+```
+
+Install mpi4py through pip install:
+```
+pip install mpi4py
 ```
 
 ## Running FastTrip
