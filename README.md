@@ -63,7 +63,7 @@ Line 37:CoreNumber=5
 ```
 
 We can simply run FastTrip for the example in the paper:
-(The 'Optimization_NGA' is a binary file, which is pre-compiled on a 64-bit machine. If you fail to run it, you can also type 'make' in the source code folder 'src_Optimization_NGA' to compile it on your own machine.)
+(The 'Optimization_NGA' is a binary file, which is pre-compiled on a 64-bit machine. If you fail to run it, you can also type 'make' in the source code folder './src_Optimization_NGA' to compile it on your own machine.)
 
 ```
 ./Optimization_NGA
