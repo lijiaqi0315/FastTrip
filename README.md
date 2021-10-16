@@ -74,6 +74,45 @@ Batch deletion for the output files is also supported:
 make rm
 ```
 
+
+# Tips
+## 1. Focal Mechanism
+Note that the definitions of the coordinates in Qseis (Mxyz) and GCMT (Mtpr) are different. Therefore the moment tensor downloaded from GCMT needs to be converted:
+```
+Mxx=+Mtt
+Myy=+Mpp
+Mzz=+Mrr
+Mxy=-Mtp
+Myz=-Mrp
+Mzx=+Mrt
+```
+
+## 2. Normalization
+If you prefer use the array normalization (default in the code), this means that you trust the absolute amplitudes of your stations. If, somtimes, the absolute amplitudes maybe not that reliable, trace normalization works better. You can swift to trace normalization in this way:
+
+Original codes:
+```
+##Array Normalize All the Traces According to the Reference Trace
+for Station_index in np.arange(1,Station_Num+1,1):  
+    data_filter[Station_index,:] = data_filter[Station_index,:].copy()/Syn_max/4
+```
+
+Trace-normalization codes:
+```
+##Trace Normalize All the Traces According to the Reference Trace
+for Station_index in np.arange(1,Station_Num+1,1):  
+    Trace_max=max(map(abs,data_filter[Station_index,:].copy()))                                        
+    data_filter[Station_index,:] = data_filter[Station_index,:].copy()/Trace_max/4
+```
+
+Note that here I choose a normalization factor of 4 for the synthetic waveforms (e.g, /Trace_max/4). In this way, you need to also divide your data by 4.
+
+
+
+
+
+
+
 ## Acknowledgments
 
 * We thank Yanbin Wang (Peking University) for testing the FastTrip package and Zhigang Peng (Georgia Tech) for valuable advice.
